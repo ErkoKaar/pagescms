@@ -167,11 +167,19 @@ function RepoSwitcher() {
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/thor/thor-mark-color.svg"
+                src="/thor/thor-mark-basalt.svg"
                 alt=""
                 width={358}
                 height={276}
-                className="h-6 w-8 object-contain"
+                className="h-6 w-8 object-contain dark:hidden"
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/thor/thor-mark-stone.svg"
+                alt=""
+                width={358}
+                height={276}
+                className="hidden h-6 w-8 object-contain dark:block"
               />
               <div className="grid flex-1 text-left leading-tight">
                 <span className="truncate font-display font-semibold">
