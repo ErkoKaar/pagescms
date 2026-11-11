@@ -158,14 +158,34 @@ const getCollapsibleItemLabel = (
     );
   }
 
-  return `Item ${index !== undefined ? `#${index + 1}` : ""}`;
+  return (
+    getItemTitle(field, fieldValues) ??
+    `Item ${index !== undefined ? `#${index + 1}` : ""}`
+  );
 };
 
-const hasCollapsibleSummary = (field: Field) =>
-  typeof field.list === "object" &&
-  !!field.list.collapsible &&
-  typeof field.list.collapsible === "object" &&
-  !!field.list.collapsible.summary;
+// Without a configured summary, a list item is titled by its own text
+// (link text, name, heading…) instead of "Item #1".
+const ITEM_TITLE_KEYS = ["label", "name", "title", "heading", "question", "text"];
+
+const getItemTitle = (field: Field, fieldValues: unknown) => {
+  if (!fieldValues || typeof fieldValues !== "object") return undefined;
+  const values = fieldValues as Record<string, unknown>;
+  const keys = [
+    ...ITEM_TITLE_KEYS,
+    ...(field.fields ?? [])
+      .filter((child) => ["string", "text"].includes(child.type as string) && !child.list)
+      .map((child) => child.name),
+  ];
+  for (const key of keys) {
+    const value = values[key];
+    if (typeof value !== "string") continue;
+    const text = value.trim();
+    if (!text || /^(\/|#|https?:|mailto:|tel:)/.test(text)) continue;
+    return text.length > 60 ? `${text.slice(0, 60)}…` : text;
+  }
+  return undefined;
+};
 
 const hasExplicitReadonly = (field: Field) =>
   Boolean(field.readonly) &&
@@ -826,14 +846,25 @@ const ObjectField = forwardRef<HTMLDivElement, NestedFieldProps>(
       return hasFieldPathError(errors, fieldName);
     };
 
-    const itemLabel = hasCollapsibleSummary(field) ? (
+    const [advancedNestedOpen, setAdvancedNestedOpen] = useState(false);
+
+    const itemLabel = (
       <ObjectFieldSummaryLabel
         field={field}
         fieldName={fieldName}
         index={index}
       />
-    ) : (
-      `Item ${index !== undefined ? `#${index + 1}` : ""}`
+    );
+
+    const nestedFields = field.fields || [];
+    const advancedNested = nestedFields.filter(
+      (child) => child?.advanced && !child.hidden,
+    );
+    const mainNested = advancedNested.length
+      ? nestedFields.filter((child) => !child?.advanced)
+      : nestedFields;
+    const hasAdvancedNestedError = advancedNested.some((child) =>
+      hasFieldPathError(errors, `${fieldName}.${child.name}`),
     );
 
     return (
@@ -852,7 +883,7 @@ const ObjectField = forwardRef<HTMLDivElement, NestedFieldProps>(
                 isOpen ? "rotate-90" : "",
               )}
             />
-            <span className={hasErrors() ? "text-destructive" : ""}>
+            <span className={cn("truncate", hasErrors() && "text-destructive")}>
               {itemLabel}
             </span>
           </header>
@@ -865,12 +896,36 @@ const ObjectField = forwardRef<HTMLDivElement, NestedFieldProps>(
           )}
         >
           {renderFields(
-            field.fields || [],
+            mainNested,
             fieldName,
             registerBeforeSubmitHook,
             undefined,
             Boolean(field.readonly),
             keyPrefix,
+          )}
+          {advancedNested.length > 0 && (
+            <details
+              className="group rounded-lg border border-dashed"
+              open={advancedNestedOpen || hasAdvancedNestedError}
+              onToggle={(event) =>
+                setAdvancedNestedOpen(event.currentTarget.open)
+              }
+            >
+              <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-lg px-3 text-sm text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+                <ChevronRight className="size-4 shrink-0 transition-transform duration-200 group-open:rotate-90 motion-reduce:transition-none" />
+                Labels and technical texts ({advancedNested.length})
+              </summary>
+              <div className="grid gap-6 px-3 pb-4 pt-2">
+                {renderFields(
+                  advancedNested,
+                  fieldName,
+                  registerBeforeSubmitHook,
+                  undefined,
+                  Boolean(field.readonly),
+                  keyPrefix,
+                )}
+              </div>
+            </details>
           )}
         </div>
       </div>

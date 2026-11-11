@@ -1,5 +1,16 @@
 "use client";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
 // Rendered inside <form id="entry-form">, so the submit button uses the same submit path as the header Save.
@@ -22,15 +33,28 @@ const EntrySaveBar = ({
       Unsaved changes
     </p>
     <div className="flex w-full items-center gap-2 sm:w-auto">
-      <Button
-        type="button"
-        variant="ghost"
-        size="lg"
-        disabled={isSaving}
-        onClick={onDiscard}
-      >
-        Discard
-      </Button>
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button type="button" variant="ghost" size="lg" disabled={isSaving}>
+            Discard
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Discard your changes?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Everything you changed on this page since the last save will be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Keep editing</AlertDialogCancel>
+            <AlertDialogAction variant="destructive" onClick={onDiscard}>
+              Discard changes
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <Button
         type="submit"
         size="lg"

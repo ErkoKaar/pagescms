@@ -25,6 +25,7 @@ import {
 } from "@/lib/utils/file";
 import type { ApiSuccess, EntryData, EntryHistoryItem } from "@/types/api";
 import { EntryForm } from "./entry-form";
+import { EntryUnsavedGuard } from "./entry-unsaved-guard";
 import { EntryHistoryDropdown } from "./entry-history";
 import { EmptyCreate } from "@/components/empty-create";
 import { FileOptions } from "@/components/file/file-options";
@@ -846,7 +847,9 @@ export function Entry({
   }
   
   return (
-    isLoading
+    <>
+      <EntryUnsavedGuard active={hasUnsavedChanges && !isSaving} />
+      {isLoading
       ? loadingSkeleton
       : <EntryForm
         fields={entryFields}
@@ -896,6 +899,7 @@ export function Entry({
           changeVersionRef.current += 1;
           setHasRegisteredChanges(true);
         }}
-      />
+      />}
+    </>
   );
 };
