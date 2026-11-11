@@ -32,7 +32,7 @@ export function SignIn() {
   const getErrorMessage = (value: string) => {
     if (value.toLowerCase() !== "unable_to_get_user_info") return value;
     return [
-      "GitHub denied profile access. Re-authorize Pages CMS in GitHub Settings > Applications > Authorized GitHub Apps / Authorized OAuth Apps, then try again.",
+      "GitHub denied profile access. Re-authorize Thor CMS in GitHub Settings > Applications > Authorized GitHub Apps / Authorized OAuth Apps, then try again.",
       "https://github.com/settings/applications",
     ].join(" ");
   };
@@ -131,33 +131,39 @@ export function SignIn() {
     setOtp("");
   };
 
-  const legalCopy = (
-    <p className="text-sm text-muted-foreground">
-      By clicking continue, you agree to our{" "}
-      <a
-        className="underline hover:decoration-muted-foreground/50"
-        href="https://pagescms.org/terms"
-        target="_blank"
-      >
-        Terms of Service
-      </a>{" "}
-      and{" "}
-      <a
-        className="underline hover:decoration-muted-foreground/50"
-        href="https://pagescms.org/privacy"
-        target="_blank"
-      >
-        Privacy Policy
-      </a>
-      .
-    </p>
-  );
+  const sites = ["Thor Offshore", "Thor Fisheries", "O.C. Joensen"];
 
   return (
-    <div className="min-h-screen p-4 md:p-6 flex justify-center items-center">
-      <div className="sm:max-w-[340px] w-full">
-        {step === "otp" ? (
-          <div className="space-y-6">
+    <div className="grid min-h-svh max-lg:grid-rows-[auto_1fr] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+      <aside className="flex flex-col justify-between gap-10 bg-[#2E3338] px-6 py-6 text-[#E4E2DC] lg:px-12 lg:py-12">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/thor/thor-group-stone.svg"
+          alt="Thor Group"
+          width={824}
+          height={276}
+          className="h-10 w-auto self-start lg:h-14"
+        />
+        <div className="space-y-6 max-lg:hidden">
+          <p className="font-display text-5xl leading-[0.95] font-semibold xl:text-6xl">
+            Content
+            <br />
+            manager
+          </p>
+          <ul className="space-y-1 text-lg text-[#E4E2DC]/70">
+            {sites.map((site) => (
+              <li key={site}>{site}</li>
+            ))}
+          </ul>
+        </div>
+        <p className="text-sm text-[#E4E2DC]/60 max-lg:hidden">
+          Edit the texts and images of your websites. Changes go live in about
+          a minute.
+        </p>
+      </aside>
+      <main className="flex items-center justify-center px-6 py-10 lg:px-12">
+        <div className="w-full sm:max-w-[380px]">
+          {step === "otp" ? (
             <OtpVerificationForm
               busy={isSubmitting}
               emailLabel={email}
@@ -173,68 +179,68 @@ export function SignIn() {
                 await handleOtpSignIn();
               }}
             />
-            {legalCopy}
-          </div>
-        ) : (
-          <div className="space-y-6">
-            <h1 className="text-lg font-medium tracking-tight text-center">
-              Sign in to Pages CMS
-            </h1>
-            <Button
-              type="button"
-              className="w-full"
-              onClick={handleGithubSignIn}
-              disabled={isSubmitting}
-            >
-              <svg
-                role="img"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
+          ) : (
+            <div className="space-y-8">
+              <div className="space-y-2">
+                <h1 className="text-3xl font-semibold">Sign in</h1>
+                <p className="text-muted-foreground">
+                  Enter your email and we will send you a 6-digit code. No
+                  password needed.
+                </p>
+              </div>
+              <form
+                className="space-y-3"
+                onSubmit={async (event) => {
+                  event.preventDefault();
+                  await handleEmailSignIn();
+                }}
               >
-                <title>GitHub</title>
-                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-              </svg>
-              Sign in with GitHub
-              {submittingMethod === "github" && (
-                <Loader className="size-4 animate-spin" />
-              )}
-            </Button>
-            <div className="relative text-center">
-              <div className="absolute inset-0 flex items-center">
-                <hr className="border-t w-full" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">Or</span>
-              </div>
-            </div>
-            <form
-              className="space-y-2"
-              onSubmit={async (event) => {
-                event.preventDefault();
-                await handleEmailSignIn();
-              }}
-            >
-              <Input
-                type="email"
-                name="email"
-                placeholder="Email"
-                required
-                disabled={isSubmitting}
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-              />
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                Continue with email
-                {submittingMethod === "email" && (
-                  <Loader className="size-4 animate-spin" />
+                <label className="block space-y-2">
+                  <span className="text-sm font-medium">Email</span>
+                  <Input
+                    type="email"
+                    name="email"
+                    autoComplete="email"
+                    inputMode="email"
+                    autoFocus
+                    placeholder="name@company.fo"
+                    className="h-12 text-base md:text-base"
+                    required
+                    disabled={isSubmitting}
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                  />
+                </label>
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="h-12 w-full text-base"
+                  disabled={isSubmitting}
+                >
+                  Send me a code
+                  {submittingMethod === "email" && (
+                    <Loader className="size-4 animate-spin" />
+                  )}
+                </Button>
+              </form>
+              <p className="text-sm text-muted-foreground">
+                Developer?{" "}
+                <button
+                  type="button"
+                  className="font-medium text-foreground underline underline-offset-4 hover:no-underline disabled:opacity-50"
+                  onClick={handleGithubSignIn}
+                  disabled={isSubmitting}
+                >
+                  Sign in with GitHub
+                </button>
+                {submittingMethod === "github" && (
+                  <Loader className="ml-2 inline size-4 animate-spin" />
                 )}
-              </Button>
-            </form>
-            {legalCopy}
-          </div>
-        )}
-      </div>
+              </p>
+            </div>
+          )}
+        </div>
+      </main>
     </div>
   );
 }

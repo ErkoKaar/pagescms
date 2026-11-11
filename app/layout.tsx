@@ -1,14 +1,15 @@
 import { Toaster } from "@/components/ui/sonner"
 import { Providers } from "@/components/providers";
-import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Archivo, JetBrains_Mono } from "next/font/google";
 import { getBaseUrl } from "@/lib/base-url";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
-const inter = Inter({
+const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-inter",
+  axes: ["wdth"],
+  variable: "--font-archivo",
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -17,13 +18,18 @@ const jetbrainsMono = JetBrains_Mono({
 });
 const appUrl = getBaseUrl();
 const socialImage = "/images/social-card.png";
-const description = "The No-Hassle CMS for GitHub";
+const description = "Content manager for the Thor Group websites";
+
+export const viewport: Viewport = {
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
+  robots: { index: false, follow: false },
   metadataBase: new URL(appUrl),
   title: {
-    template: "%s | Pages CMS",
-    default: "Pages CMS",
+    template: "%s | Thor CMS",
+    default: "Thor CMS",
   },
   description,
   alternates: {
@@ -32,21 +38,21 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: appUrl,
-    siteName: "Pages CMS",
-    title: "Pages CMS",
+    siteName: "Thor CMS",
+    title: "Thor CMS",
     description,
     images: [
       {
         url: socialImage,
         width: 1200,
         height: 630,
-        alt: "Pages CMS social card",
+        alt: "Thor CMS social card",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pages CMS",
+    title: "Thor CMS",
     description,
     images: [socialImage],
   },
@@ -62,7 +68,7 @@ export default async function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          inter.variable,
+          archivo.variable,
           jetbrainsMono.variable,
         )}
       >

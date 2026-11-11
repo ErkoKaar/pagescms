@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Fragment,
   memo,
   useState,
   useMemo,
@@ -88,6 +89,12 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { interpolate } from "@/lib/schema";
+import { EntrySaveBar } from "./entry-save-bar";
+import {
+  EntrySectionNav,
+  MIN_SECTIONS,
+  type EntrySection,
+} from "./entry-section-nav";
 
 type BeforeSubmitHook = () => void | Promise<void>;
 type RegisterBeforeSubmitHook = (
@@ -201,7 +208,7 @@ const SortableItem = ({
           type="button"
           variant="ghost"
           size="icon-sm"
-          className="h-auto w-6 self-stretch cursor-move text-muted-foreground hover:text-foreground"
+          className="h-auto w-10 sm:w-6 self-stretch cursor-move text-muted-foreground hover:text-foreground"
           {...attributes}
           {...listeners}
         >
@@ -243,11 +250,16 @@ const ListItemRow = memo(function ListItemRow({
   onPendingRemoveChange: (index: number, open: boolean) => void;
 }) {
   const isReadonly = Boolean(field.readonly);
+  // The list's description is shown once by ListField, not under every item.
+  const itemField = useMemo(
+    () => ({ ...field, description: undefined }),
+    [field],
+  );
   return (
     <SortableItem id={id} readonly={isReadonly}>
-      <div className="grid gap-6 flex-1">
+      <div className="grid gap-6 flex-1 min-w-0">
         <SingleField
-          field={field}
+          field={itemField}
           fieldName={`${fieldName}.${index}`}
           keyPrefix={id}
           renderFields={renderFields}
@@ -270,7 +282,7 @@ const ListItemRow = memo(function ListItemRow({
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="text-muted-foreground hover:text-foreground self-start"
+                  className="size-10 sm:size-9 text-muted-foreground hover:text-foreground self-start"
                   onClick={() => onRequestRemove(index)}
                 >
                   <Trash2 />
@@ -503,6 +515,9 @@ const ListField = ({
                   );
                 })()}
             </div>
+          )}
+          {field.description && (
+            <FormDescription>{field.description}</FormDescription>
           )}
           <div className="space-y-2">
             <DndContext
@@ -1034,14 +1049,24 @@ const EntryForm = ({
   filePath,
   onDirtyChange,
   onChangeRegistered,
+  hasUnsavedChanges = false,
+  saveDisabled = false,
+  isSaving = false,
+  onDiscard,
 }: {
   fields: Field[];
   contentObject?: Record<string, unknown>;
-  onSubmit: (values: Record<string, unknown>) => void;
+  // Resolve to true when the save succeeded, so the saved values become the new baseline.
+  onSubmit: (values: Record<string, unknown>) => void | boolean | Promise<void | boolean>;
   filePath?: React.ReactNode;
   onDirtyChange?: (isDirty: boolean) => void;
   onChangeRegistered?: () => void;
+  hasUnsavedChanges?: boolean;
+  saveDisabled?: boolean;
+  isSaving?: boolean;
+  onDiscard?: () => void;
 }) => {
+  const sectionBaseId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const zodSchema = useMemo(() => {
     return generateZodSchema(fields);
   }, [fields]);
@@ -1140,7 +1165,8 @@ const EntryForm = ({
   const handleSubmit = useCallback(
     async (values: Record<string, unknown>) => {
       const latestValues = form.getValues() as Record<string, unknown>;
-      await onSubmit(latestValues);
+      const saved = await onSubmit(latestValues);
+      if (saved === true) form.reset(latestValues, { keepValues: true });
     },
     [form, onSubmit],
   );
@@ -1158,21 +1184,84 @@ const EntryForm = ({
     [form, handleSubmit, runBeforeValidationHooks],
   );
 
+  const handleDiscard = useCallback(() => {
+    form.reset();
+    onDiscard?.();
+  }, [form, onDiscard]);
+
+  // Top-level objects and lists are the page sections, in field order.
+  const { sections, sectionByField } = useMemo(() => {
+    const sections: EntrySection[] = [];
+    const sectionByField = new Map<Field, EntrySection>();
+    fields.forEach((field, index) => {
+      if (
+        !field ||
+        field.hidden ||
+        field.label === false ||
+        !(field.type === "object" || field.list)
+      )
+        return;
+      const section = {
+        id: `${sectionBaseId}-section-${index}`,
+        label: field.label || field.name,
+      };
+      sections.push(section);
+      sectionByField.set(field, section);
+    });
+    return { sections, sectionByField };
+  }, [fields, sectionBaseId]);
+  const showSectionNav = sections.length >= MIN_SECTIONS;
+
   return (
     <Form {...form}>
-      <form
-        id="entry-form"
-        onSubmit={handleFormSubmit}
-        className="w-full max-w-screen-md mx-auto grid items-start gap-6"
-      >
-        {filePath && (
-          <div className="space-y-2 overflow-hidden">
-            <FormLabel>Filename</FormLabel>
-            {filePath}
-          </div>
+      <div
+        className={cn(
+          "w-full max-w-screen-md mx-auto",
+          showSectionNav &&
+            "xl:max-w-[60.5rem] xl:grid xl:grid-cols-[minmax(0,48rem)_11rem] xl:gap-6",
         )}
-        {renderFields(fields, undefined, registerBeforeSubmitHook, runBeforeValidationHooks)}
-      </form>
+      >
+        <form
+          id="entry-form"
+          onSubmit={handleFormSubmit}
+          className="min-w-0 grid items-start gap-6"
+        >
+          {filePath && (
+            <div className="space-y-2 overflow-hidden">
+              <FormLabel>Filename</FormLabel>
+              {filePath}
+            </div>
+          )}
+          {fields.map((field) => {
+            const rendered = renderFields(
+              [field],
+              undefined,
+              registerBeforeSubmitHook,
+              runBeforeValidationHooks,
+            );
+            const section = sectionByField.get(field);
+            return section ? (
+              <div key={section.id} id={section.id} className="scroll-mt-20">
+                {rendered}
+              </div>
+            ) : (
+              <Fragment key={field.name}>{rendered}</Fragment>
+            );
+          })}
+          {hasUnsavedChanges && (
+            <EntrySaveBar
+              disabled={saveDisabled}
+              isSaving={isSaving}
+              onDiscard={handleDiscard}
+            />
+          )}
+        </form>
+        {showSectionNav && (
+          <aside className="hidden xl:block">
+            <EntrySectionNav sections={sections} />
+          </aside>
+        )}
+      </div>
     </Form>
   );
 };

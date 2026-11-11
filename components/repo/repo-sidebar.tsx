@@ -14,12 +14,12 @@ import { useConfig } from "@/contexts/config-context";
 import { useRepo } from "@/contexts/repo-context";
 import { useUser } from "@/contexts/user-context";
 import { hasGithubIdentity } from "@/lib/authz-shared";
+import { getSiteName, getThorSite } from "@/lib/thor-sites";
 import { isCacheEnabled, isConfigEnabled } from "@/lib/config";
 import { getRootActions } from "@/lib/actions";
 import { getVisits } from "@/lib/tracker";
 import { RepoActionButtons } from "@/components/repo/repo-action-buttons";
 import { RepoBranches } from "@/components/repo/repo-branches";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "@/components/user";
 import { AdminButton } from "@/components/admin-button";
 import { About } from "@/components/about";
@@ -93,6 +93,9 @@ function RepoSwitcher() {
   const { owner, repo, branches = [] } = useRepo();
   const { config } = useConfig();
   const currentBranch = config?.branch ?? "";
+  const { user } = useUser();
+  const isDeveloper = hasGithubIdentity(user);
+  const site = getThorSite(repo);
   const sortedBranches = useMemo(
     () => [...branches].sort((a, b) => a.localeCompare(b)),
     [branches],
@@ -162,19 +165,20 @@ function RepoSwitcher() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-md">
-                <AvatarImage
-                  src={`https://github.com/${owner}.png`}
-                  alt={owner}
-                />
-                <AvatarFallback>
-                  {owner.slice(0, 2).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{repo}</span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/thor/thor-mark-color.svg"
+                alt=""
+                width={358}
+                height={276}
+                className="h-6 w-8 object-contain"
+              />
+              <div className="grid flex-1 text-left leading-tight">
+                <span className="truncate font-display font-semibold">
+                  {site?.name ?? repo}
+                </span>
                 <span className="truncate text-xs text-muted-foreground">
-                  {currentBranch || owner}
+                  {isDeveloper ? currentBranch || owner : "Switch website"}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
@@ -189,6 +193,19 @@ function RepoSwitcher() {
                 : undefined
             }
           >
+            {site && (
+              <>
+                <DropdownMenuItem asChild>
+                  <a href={site.url} target="_blank" rel="noreferrer">
+                    View live website
+                    <ArrowUpRight className="size-3 text-muted-foreground ml-auto" />
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+              </>
+            )}
+            {isDeveloper && (
+              <>
             <DropdownMenuItem asChild>
               <a
                 href={`https://github.com/${owner}/${repo}`}
@@ -217,11 +234,13 @@ function RepoSwitcher() {
             <DialogTrigger asChild>
               <DropdownMenuItem>Manage branches</DropdownMenuItem>
             </DialogTrigger>
+                <DropdownMenuSeparator />
+              </>
+            )}
             {recentRepos.length > 0 && (
               <>
-                <DropdownMenuSeparator />
                 <DropdownMenuLabel className="text-xs text-muted-foreground">
-                  Recently visited
+                  Other websites
                 </DropdownMenuLabel>
                 {recentRepos.map((visit) => (
                   <DropdownMenuItem
@@ -231,12 +250,7 @@ function RepoSwitcher() {
                     <Link
                       href={`/${visit.owner}/${visit.repo}/${encodeURIComponent(visit.branch)}`}
                     >
-                      <img
-                        src={`https://github.com/${visit.owner}.png`}
-                        alt={`${visit.owner}'s avatar`}
-                        className="size-5 rounded"
-                      />
-                      <span className="truncate">{visit.repo}</span>
+                      <span className="truncate">{getSiteName(visit.repo)}</span>
                     </Link>
                   </DropdownMenuItem>
                 ))}
@@ -244,7 +258,7 @@ function RepoSwitcher() {
             )}
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href="/">All projects</Link>
+              <Link href="/">All websites</Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -412,18 +412,42 @@ export function Entry({
       if (submitStartChangeVersion === changeVersionRef.current) {
         setHasRegisteredChanges(false);
       }
+      return true;
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(error.message);
       } else {
         console.error(error);
       }
+      return false;
     } finally {
       setIsSaving(false);
     }
   };
 
   const isBusy = isLoading || isSaving;
+  const hasUnsavedChanges =
+    isFormDirty
+    || hasRegisteredChanges
+    || (
+      showFilenameField
+      && filenameFieldMode === "enabled"
+      && isFilenameUnlocked
+      && filenameChanged
+    );
+  const isSaveDisabled =
+    isBusy ||
+    (showFilenameField && filenameValue.trim().length === 0) ||
+    (Boolean(path) && !hasUnsavedChanges);
+
+  // The form resets its own values; this resets what lives outside it.
+  const handleDiscard = useCallback(() => {
+    setHasRegisteredChanges(false);
+    if (path) {
+      setFilenameValue(currentFilename);
+      setIsFilenameUnlocked(false);
+    }
+  }, [currentFilename, path]);
 
   useEffect(() => {
     const handleSaveShortcut = (event: KeyboardEvent) => {
@@ -486,10 +510,10 @@ export function Entry({
         <>
           {groupTrail.map((group) => (
             <Fragment key={`group-${group.name}`}>
-              <BreadcrumbItem>
+              <BreadcrumbItem className="max-md:hidden">
                 <span>{group.label || group.name}</span>
               </BreadcrumbItem>
-              <BreadcrumbSeparator />
+              <BreadcrumbSeparator className="max-md:hidden" />
             </Fragment>
           ))}
           <BreadcrumbItem className="truncate">
@@ -506,10 +530,10 @@ export function Entry({
         <>
           {groupTrail.map((group) => (
             <Fragment key={`group-${group.name}`}>
-              <BreadcrumbItem>
+              <BreadcrumbItem className="max-md:hidden">
                 <span>{group.label || group.name}</span>
               </BreadcrumbItem>
-              <BreadcrumbSeparator />
+              <BreadcrumbSeparator className="max-md:hidden" />
             </Fragment>
           ))}
           <BreadcrumbItem>
@@ -544,10 +568,10 @@ export function Entry({
       <>
         {groupTrail.map((group) => (
           <Fragment key={`group-${group.name}`}>
-            <BreadcrumbItem>
+            <BreadcrumbItem className="max-md:hidden">
               <span>{group.label || group.name}</span>
             </BreadcrumbItem>
-            <BreadcrumbSeparator />
+            <BreadcrumbSeparator className="max-md:hidden" />
           </Fragment>
         ))}
         <BreadcrumbItem>
@@ -682,23 +706,7 @@ export function Entry({
           <Button
             type="submit"
             form="entry-form"
-            disabled={
-              isBusy ||
-              (showFilenameField && filenameValue.trim().length === 0) ||
-              (
-                Boolean(path) &&
-                !(
-                  isFormDirty
-                  || hasRegisteredChanges
-                  || (
-                    showFilenameField
-                    && filenameFieldMode === "enabled"
-                    && isFilenameUnlocked
-                    && filenameChanged
-                  )
-                )
-              )
-            }
+            disabled={isSaveDisabled}
             aria-label="Save"
           >
             <Save className="size-4 sm:hidden" />
@@ -730,7 +738,7 @@ export function Entry({
         </div>
       )}
     </div>
-  ), [breadcrumbNode, canDelete, canRename, filenameChanged, filenameFieldMode, filenameValue, handleDelete, handleRename, hasRegisteredChanges, headerActionsNode, headerMeta, historyData, isBusy, isFilenameUnlocked, isFormDirty, isLoading, name, path, schemaType, sha, showFilenameField, showHeaderActions]);
+  ), [breadcrumbNode, canDelete, canRename, handleDelete, handleRename, headerActionsNode, headerMeta, historyData, isBusy, isLoading, isSaveDisabled, name, path, schemaType, sha, showHeaderActions]);
 
   useRepoHeader({ header: headerNode });
 
@@ -879,6 +887,10 @@ export function Entry({
               </InputGroup>
             : undefined
         }
+        hasUnsavedChanges={hasUnsavedChanges}
+        saveDisabled={isSaveDisabled}
+        isSaving={isSaving}
+        onDiscard={handleDiscard}
         onDirtyChange={setIsFormDirty}
         onChangeRegistered={() => {
           changeVersionRef.current += 1;

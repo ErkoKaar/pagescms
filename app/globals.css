@@ -7,7 +7,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-archivo);
   --font-mono: var(--font-jetbrains-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -47,73 +47,74 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
+/* Thor: kivihall paber, basalt tint. Deep Blue jääb logosse, punane ainult kustutamisele. */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.147 0.004 49.25);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.147 0.004 49.25);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.147 0.004 49.25);
-  --primary: oklch(0.60 0.13 163);
-  --primary-foreground: oklch(0.98 0.02 166);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
-  --muted: oklch(0.97 0.001 106.424);
-  --muted-foreground: oklch(0.553 0.013 58.071);
-  --accent: oklch(0.97 0.001 106.424);
-  --accent-foreground: oklch(0.216 0.006 56.043);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.923 0.003 48.717);
-  --input: oklch(0.923 0.003 48.717);
-  --ring: oklch(0.709 0.01 56.259);
-  --chart-1: oklch(0.85 0.13 165);
-  --chart-2: oklch(0.77 0.15 163);
-  --chart-3: oklch(0.70 0.15 162);
-  --chart-4: oklch(0.60 0.13 163);
-  --chart-5: oklch(0.51 0.10 166);
+  --background: #ECEAE4;
+  --foreground: #2E3338;
+  --card: #F6F5F1;
+  --card-foreground: #2E3338;
+  --popover: #FBFAF7;
+  --popover-foreground: #2E3338;
+  --primary: #2E3338;
+  --primary-foreground: #F2F0EA;
+  --secondary: #DDDAD2;
+  --secondary-foreground: #2E3338;
+  --muted: #E0DDD5;
+  --muted-foreground: #5B6065;
+  --accent: #DDDAD2;
+  --accent-foreground: #2E3338;
+  --destructive: #D1141C;
+  --border: #D2CEC5;
+  --input: #BDB9AE;
+  --ring: #2E3338;
+  --chart-1: #2E3338;
+  --chart-2: #5B6065;
+  --chart-3: #8A8E90;
+  --chart-4: #0B5686;
+  --chart-5: #D1141C;
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0.001 106.423);
-  --sidebar-foreground: oklch(0.147 0.004 49.25);
-  --sidebar-primary: oklch(0.60 0.13 163);
-  --sidebar-primary-foreground: oklch(0.98 0.02 166);
-  --sidebar-accent: oklch(0.97 0.001 106.424);
-  --sidebar-accent-foreground: oklch(0.216 0.006 56.043);
-  --sidebar-border: oklch(0.923 0.003 48.717);
-  --sidebar-ring: oklch(0.709 0.01 56.259);
+  --sidebar: #E4E2DC;
+  --sidebar-foreground: #2E3338;
+  --sidebar-primary: #2E3338;
+  --sidebar-primary-foreground: #F2F0EA;
+  --sidebar-accent: #D5D2C9;
+  --sidebar-accent-foreground: #2E3338;
+  --sidebar-border: #D2CEC5;
+  --sidebar-ring: #2E3338;
 }
 
 .dark {
-  --background: oklch(0.147 0.004 49.25);
-  --foreground: oklch(0.985 0.001 106.423);
-  --card: oklch(0.216 0.006 56.043);
-  --card-foreground: oklch(0.985 0.001 106.423);
-  --popover: oklch(0.216 0.006 56.043);
-  --popover-foreground: oklch(0.985 0.001 106.423);
-  --primary: oklch(0.70 0.15 162);
-  --primary-foreground: oklch(0.26 0.05 173);
-  --secondary: oklch(0.274 0.006 286.033);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.268 0.007 34.298);
-  --muted-foreground: oklch(0.709 0.01 56.259);
-  --accent: oklch(0.268 0.007 34.298);
-  --accent-foreground: oklch(0.985 0.001 106.423);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.553 0.013 58.071);
-  --chart-1: oklch(0.85 0.13 165);
-  --chart-2: oklch(0.77 0.15 163);
-  --chart-3: oklch(0.70 0.15 162);
-  --chart-4: oklch(0.60 0.13 163);
-  --chart-5: oklch(0.51 0.10 166);
-  --sidebar: oklch(0.216 0.006 56.043);
-  --sidebar-foreground: oklch(0.985 0.001 106.423);
-  --sidebar-primary: oklch(0.77 0.15 163);
-  --sidebar-primary-foreground: oklch(0.26 0.05 173);
-  --sidebar-accent: oklch(0.268 0.007 34.298);
-  --sidebar-accent-foreground: oklch(0.985 0.001 106.423);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.553 0.013 58.071);
+  --background: #22262A;
+  --foreground: #E4E2DC;
+  --card: #2E3338;
+  --card-foreground: #E4E2DC;
+  --popover: #2E3338;
+  --popover-foreground: #E4E2DC;
+  --primary: #E4E2DC;
+  --primary-foreground: #22262A;
+  --secondary: #3A4046;
+  --secondary-foreground: #E4E2DC;
+  --muted: #33383D;
+  --muted-foreground: #A9AAA6;
+  --accent: #3A4046;
+  --accent-foreground: #E4E2DC;
+  --destructive: #F0545B;
+  --border: #40464C;
+  --input: #555B61;
+  --ring: #E4E2DC;
+  --chart-1: #E4E2DC;
+  --chart-2: #A9AAA6;
+  --chart-3: #7C8084;
+  --chart-4: #5FA3D0;
+  --chart-5: #F0545B;
+  --sidebar: #2A2E33;
+  --sidebar-foreground: #E4E2DC;
+  --sidebar-primary: #E4E2DC;
+  --sidebar-primary-foreground: #22262A;
+  --sidebar-accent: #3A4046;
+  --sidebar-accent-foreground: #E4E2DC;
+  --sidebar-border: #40464C;
+  --sidebar-ring: #E4E2DC;
 }
 
 @layer base {
@@ -122,5 +123,13 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Pealkirjad: Archivo laiusega 125 nagu Thori lehtedel. */
+@layer base {
+  h1, h2, .font-display {
+    font-stretch: 125%;
+    letter-spacing: -0.02em;
   }
 }

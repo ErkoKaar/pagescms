@@ -31,20 +31,20 @@ export function OtpVerificationForm({
   pending,
   resendDisabled,
   resendPending,
-  submitLabel = "Verify code",
+  submitLabel = "Sign in",
   onChange,
   onResend,
   onSignInAnotherWay,
   onSubmit,
 }: OtpVerificationFormProps) {
   return (
-    <form className="flex w-full flex-col items-center gap-6" onSubmit={onSubmit}>
-      <div className="space-y-2 text-center">
-        <h1 className="text-lg font-medium tracking-tight">
-          Verify your login
+    <form className="flex w-full flex-col gap-8" onSubmit={onSubmit}>
+      <div className="space-y-2">
+        <h1 className="text-3xl font-semibold">
+          Check your email
         </h1>
-        <p className="text-sm text-muted-foreground">
-          Enter the 6-digit code sent to {emailLabel}.
+        <p className="text-muted-foreground">
+          We sent a 6-digit code to <span className="font-medium text-foreground">{emailLabel}</span>. It is valid for 5 minutes.
         </p>
       </div>
 
@@ -59,7 +59,7 @@ export function OtpVerificationForm({
         <InputOTPGroup>
           {Array.from({ length: 6 }, (_, index) => (
             <InputOTPSlot
-              className="size-10 font-mono text-lg"
+              className="size-12 bg-popover font-mono text-xl sm:size-14"
               index={index}
               key={index}
             />
@@ -68,7 +68,7 @@ export function OtpVerificationForm({
       </InputOTP>
 
       <div className="w-full space-y-2">
-        <Button className="w-full" disabled={busy || otp.length !== 6} type="submit">
+        <Button className="h-12 w-full text-base" size="lg" disabled={busy || otp.length !== 6} type="submit">
           {submitLabel}
           {pending && <Loader className="size-4 animate-spin" />}
         </Button>
@@ -90,7 +90,7 @@ export function OtpVerificationForm({
             type="button"
             variant="ghost"
           >
-            Sign in another way
+            Use a different email
           </Button>
         )}
       </div>
