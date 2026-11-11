@@ -471,24 +471,25 @@ export function RepoSidebar() {
     });
   }, [activeGroupKeys]);
 
-  const toggleGroup = useCallback((key: string) => {
+  const toggleGroup = useCallback((key: string, isOpen: boolean) => {
     setExpandedGroups((current) => ({
       ...current,
-      [key]: !(current[key] ?? false),
+      [key]: !isOpen,
     }));
   }, []);
 
   function renderNavigationNode(node: NavigationNode, key: string, nested: boolean = false): React.ReactNode {
     if (node.type === "group") {
       const isActive = hasActiveDescendant(node);
-      const isOpen = expandedGroups[key] ?? isActive;
+      // Ülataseme grupid on vaikimisi lahti, et kõik lehed oleks kohe näha.
+      const isOpen = expandedGroups[key] ?? (nested ? isActive : true);
       if (nested) {
         return (
             <SidebarMenuSubItem key={key}>
               <SidebarMenuSubButton
                 asChild
               >
-                <button type="button" onClick={() => toggleGroup(key)}>
+                <button type="button" onClick={() => toggleGroup(key, isOpen)}>
                   <ChevronRight className={cn("size-4 transition-transform", isOpen && "rotate-90")} />
                   <span>{node.label || node.name}</span>
               </button>
@@ -507,7 +508,7 @@ export function RepoSidebar() {
           <SidebarMenuButton
             asChild
           >
-            <button type="button" onClick={() => toggleGroup(key)}>
+            <button type="button" onClick={() => toggleGroup(key, isOpen)}>
               <ChevronRight className={cn("size-4 transition-transform", isOpen && "rotate-90")} />
               <span>{node.label || node.name}</span>
             </button>

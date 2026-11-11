@@ -401,6 +401,12 @@ const generateFieldObjectSchema = (
           })
           .optional()
           .nullable(),
+        advanced: z
+          .boolean({
+            message: "'advanced' must be a boolean.",
+          })
+          .optional()
+          .nullable(),
         required: z
           .boolean({
             message: "'required' must be a boolean.",

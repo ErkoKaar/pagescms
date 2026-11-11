@@ -1197,6 +1197,7 @@ const EntryForm = ({
       if (
         !field ||
         field.hidden ||
+        field.advanced ||
         field.label === false ||
         !(field.type === "object" || field.list)
       )
@@ -1208,8 +1209,20 @@ const EntryForm = ({
       sections.push(section);
       sectionByField.set(field, section);
     });
+    if (fields.some((field) => field?.advanced && !field.hidden))
+      sections.push({ id: `${sectionBaseId}-advanced`, label: "Advanced" });
     return { sections, sectionByField };
   }, [fields, sectionBaseId]);
+
+  // Harva muudetavad väljad (advanced: true) on vormi lõpus kokku pandud.
+  const advancedFields = useMemo(
+    () => fields.filter((field) => field?.advanced && !field.hidden),
+    [fields],
+  );
+  const hasAdvancedError = advancedFields.some(
+    (field) => form.formState.errors[field.name],
+  );
+  const [advancedOpen, setAdvancedOpen] = useState(false);
   const showSectionNav = sections.length >= MIN_SECTIONS;
 
   return (
@@ -1232,7 +1245,7 @@ const EntryForm = ({
               {filePath}
             </div>
           )}
-          {fields.map((field) => {
+          {fields.filter((field) => !field?.advanced || field.hidden).map((field) => {
             const rendered = renderFields(
               [field],
               undefined,
@@ -1248,6 +1261,37 @@ const EntryForm = ({
               <Fragment key={field.name}>{rendered}</Fragment>
             );
           })}
+          {advancedFields.length > 0 && (
+            <details
+              id={`${sectionBaseId}-advanced`}
+              className="group scroll-mt-20 rounded-xl border bg-card"
+              open={advancedOpen || hasAdvancedError}
+              onToggle={(event) => setAdvancedOpen(event.currentTarget.open)}
+            >
+              <summary className="flex min-h-14 cursor-pointer list-none items-center gap-3 rounded-xl px-4 py-3 outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+                <ChevronRight className="size-4 shrink-0 transition-transform duration-200 group-open:rotate-90 motion-reduce:transition-none" />
+                <span>
+                  <span className="block font-medium">Advanced</span>
+                  <span className="block text-sm text-muted-foreground">
+                    Search engine texts, button labels and other things that
+                    rarely change.
+                  </span>
+                </span>
+              </summary>
+              <div className="grid items-start gap-6 px-4 pb-4">
+                {advancedFields.map((field) => (
+                  <Fragment key={field.name}>
+                    {renderFields(
+                      [field],
+                      undefined,
+                      registerBeforeSubmitHook,
+                      runBeforeValidationHooks,
+                    )}
+                  </Fragment>
+                ))}
+              </div>
+            </details>
+          )}
           {hasUnsavedChanges && (
             <EntrySaveBar
               disabled={saveDisabled}
