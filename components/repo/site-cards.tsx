@@ -1,59 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { useUser } from "@/contexts/user-context";
-import { requireApiSuccess } from "@/lib/api-client";
+import { siteHref, useSites } from "@/hooks/use-sites";
 import { getThorSite } from "@/lib/thor-sites";
 import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
-type Repo = {
-  owner: string;
-  repo: string;
-  defaultBranch?: string;
-};
-
 export function SiteCards() {
-  const { user } = useUser();
-  const [repos, setRepos] = useState<Repo[] | null>(null);
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    const load = async () => {
-      const lists = await Promise.all(
-        (user?.accounts ?? []).map(async (account: any) => {
-          const params = new URLSearchParams({
-            type: account.type,
-            keyword: "",
-            repository_selection: account.repositorySelection,
-          });
-          const response = await fetch(
-            `/api/repos/${account.login}?${params.toString()}`,
-            { signal: controller.signal },
-          );
-          const data = await requireApiSuccess<{ data: Repo[] }>(
-            response,
-            "Failed to fetch websites",
-          );
-          return data.data;
-        }),
-      );
-      setRepos(lists.flat());
-    };
-
-    load().catch((error) => {
-      if (error.name !== "AbortError") {
-        console.error(error);
-        setRepos([]);
-      }
-    });
-
-    return () => controller.abort();
-  }, [user?.accounts]);
+  const repos = useSites();
 
   if (repos === null) {
     return (
@@ -77,7 +33,7 @@ export function SiteCards() {
     <ul className="grid gap-4 md:grid-cols-3">
       {repos.map((repo) => {
         const site = getThorSite(repo.repo);
-        const href = `/${repo.owner}/${repo.repo}/${encodeURIComponent(repo.defaultBranch ?? "main")}`;
+        const href = siteHref(repo);
 
         return (
           <li

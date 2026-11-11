@@ -17,7 +17,7 @@ import { hasGithubIdentity } from "@/lib/authz-shared";
 import { getSiteName, getThorSite } from "@/lib/thor-sites";
 import { isCacheEnabled, isConfigEnabled } from "@/lib/config";
 import { getRootActions } from "@/lib/actions";
-import { getVisits } from "@/lib/tracker";
+import { siteHref, useSites } from "@/hooks/use-sites";
 import { RepoActionButtons } from "@/components/repo/repo-action-buttons";
 import { RepoBranches } from "@/components/repo/repo-branches";
 import { User } from "@/components/user";
@@ -60,6 +60,7 @@ import {
 import {
   ArrowLeft,
   ArrowUpRight,
+  Check,
   ChevronRight,
   ChevronsUpDown,
   Database,
@@ -100,9 +101,7 @@ function RepoSwitcher() {
     () => [...branches].sort((a, b) => a.localeCompare(b)),
     [branches],
   );
-  const [recentRepos, setRecentRepos] = useState<
-    Array<{ owner: string; repo: string; branch: string }>
-  >([]);
+  const sites = useSites();
   const triggerWrapperRef = useRef<HTMLDivElement | null>(null);
   const [menuWidth, setMenuWidth] = useState<number | null>(null);
 
@@ -126,28 +125,6 @@ function RepoSwitcher() {
     };
   }, []);
 
-  const loadRecentRepos = useCallback(() => {
-    const visits = getVisits()
-      .filter(
-        (visit) =>
-          !(
-            visit.owner.toLowerCase() === owner.toLowerCase() &&
-            visit.repo.toLowerCase() === repo.toLowerCase()
-          ),
-      )
-      .slice(0, 3)
-      .map((visit) => ({
-        owner: visit.owner,
-        repo: visit.repo,
-        branch: visit.branch,
-      }));
-    setRecentRepos(visits);
-  }, [owner, repo]);
-
-  useEffect(() => {
-    loadRecentRepos();
-  }, [loadRecentRepos]);
-
   const handleBranchChange = (branch: string) => {
     router.push(`/${owner}/${repo}/${encodeURIComponent(branch)}`);
   };
@@ -155,11 +132,7 @@ function RepoSwitcher() {
   return (
     <Dialog>
       <div ref={triggerWrapperRef}>
-        <DropdownMenu
-          onOpenChange={(open) => {
-            if (open) loadRecentRepos();
-          }}
-        >
+        <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
@@ -245,25 +218,32 @@ function RepoSwitcher() {
                 <DropdownMenuSeparator />
               </>
             )}
-            {recentRepos.length > 0 && (
-              <>
-                <DropdownMenuLabel className="text-xs text-muted-foreground">
-                  Other websites
-                </DropdownMenuLabel>
-                {recentRepos.map((visit) => (
-                  <DropdownMenuItem
-                    asChild
-                    key={`${visit.owner}/${visit.repo}/${visit.branch}`}
+            <DropdownMenuLabel className="text-xs text-muted-foreground">
+              Websites
+            </DropdownMenuLabel>
+            {(sites ?? [{ owner, repo }]).map((item) => {
+              const isCurrent =
+                item.owner.toLowerCase() === owner.toLowerCase() &&
+                item.repo.toLowerCase() === repo.toLowerCase();
+
+              return (
+                <DropdownMenuItem
+                  asChild
+                  key={`${item.owner}/${item.repo}`}
+                  className="min-h-10"
+                >
+                  <Link
+                    href={isCurrent ? `/${owner}/${repo}/${encodeURIComponent(currentBranch || "main")}` : siteHref(item)}
+                    aria-current={isCurrent ? "page" : undefined}
                   >
-                    <Link
-                      href={`/${visit.owner}/${visit.repo}/${encodeURIComponent(visit.branch)}`}
-                    >
-                      <span className="truncate">{getSiteName(visit.repo)}</span>
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </>
-            )}
+                    <span className={cn("truncate", isCurrent && "font-semibold")}>
+                      {getSiteName(item.repo)}
+                    </span>
+                    {isCurrent && <Check className="ml-auto size-4" />}
+                  </Link>
+                </DropdownMenuItem>
+              );
+            })}
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link href="/">All websites</Link>
