@@ -26,31 +26,30 @@ const EntrySaveBar = ({
 }) => (
   <div
     role="region"
-    aria-label="Unsaved changes"
+    aria-label="Salvestamata muudatused"
     className="sticky bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-20 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-2xl border bg-popover p-3 shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-200 motion-reduce:animate-none"
   >
     <p className="w-full text-sm font-medium sm:w-auto sm:flex-1 sm:pl-2">
-      Unsaved changes
+      Salvestamata muudatused
     </p>
     <div className="flex w-full items-center gap-2 sm:w-auto">
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button type="button" variant="ghost" size="lg" disabled={isSaving}>
-            Discard
+            Loobu
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Discard your changes?</AlertDialogTitle>
+            <AlertDialogTitle>Loobud muudatustest?</AlertDialogTitle>
             <AlertDialogDescription>
-              Everything you changed on this page since the last save will be
-              undone.
+              Kõik, mida sel lehel pärast viimast salvestamist muutsid, võetakse tagasi.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep editing</AlertDialogCancel>
+            <AlertDialogCancel>Jätka muutmist</AlertDialogCancel>
             <AlertDialogAction variant="destructive" onClick={onDiscard}>
-              Discard changes
+              Loobu muudatustest
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -61,7 +60,7 @@ const EntrySaveBar = ({
         disabled={disabled}
         className="flex-1 sm:flex-none"
       >
-        {isSaving ? "Saving…" : "Save changes"}
+        {isSaving ? "Salvestan…" : "Salvesta"}
       </Button>
     </div>
   </div>

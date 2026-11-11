@@ -24,23 +24,23 @@ export default function Page() {
 
   return (
     <MainRootLayout>
-      <DocumentTitle title="Your websites" />
+      <DocumentTitle title="Sinu lehed" />
       <div className="mx-auto max-w-6xl p-4 md:p-8">
         {user.accounts.length > 0 ? (
           <div className="space-y-12 py-6 md:py-12">
             <div className="space-y-3">
               <h1 className="text-4xl font-semibold md:text-5xl">
-                Your websites
+                Sinu lehed
               </h1>
               <p className="text-lg text-muted-foreground">
-                Choose a website to edit its texts and images.
+                Vali leht, mille tekste ja pilte muuta.
               </p>
             </div>
             <SiteCards />
             {isGithubUser && (
               <details className="max-w-screen-sm">
                 <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
-                  Developer: all repositories
+                  Arendajale: kõik repod
                 </summary>
                 <div className="pt-4">
                   <RepoSelect />

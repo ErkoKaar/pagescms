@@ -164,7 +164,7 @@ export const auth = betterAuth({
       sendVerificationOTP: async ({ email, otp, type }) => {
         if (type !== "sign-in") return;
 
-        const subject = `Your Thor CMS sign-in code is ${otp}`;
+        const subject = `Karli CMS-i sisselogimiskood on ${otp}`;
         const html = await render(
           LoginEmailTemplate({
             email,

@@ -52,11 +52,11 @@ const EntrySectionNav = ({ sections }: { sections: EntrySection[] }) => {
 
   return (
     <nav
-      aria-label="On this page"
+      aria-label="Sel lehel"
       className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto text-sm"
     >
       <p className="mb-2 px-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-        On this page
+        Sel lehel
       </p>
       <ul className="grid gap-0.5">
         {sections.map((section) => {

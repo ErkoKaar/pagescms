@@ -311,20 +311,20 @@ const ListItemRow = memo(function ListItemRow({
             </TooltipTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Remove this item?</AlertDialogTitle>
+                <AlertDialogTitle>Eemaldad selle rea?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone.
+                  Seda ei saa tagasi võtta.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel>Tühista</AlertDialogCancel>
                 <AlertDialogAction onClick={() => onRemoveConfirm(index)}>
-                  Remove
+                  Eemalda
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-          <TooltipContent>Remove item</TooltipContent>
+          <TooltipContent>Eemalda rida</TooltipContent>
         </Tooltip>
       )}
     </SortableItem>
@@ -581,7 +581,7 @@ const ListField = ({
                   onClick={addItem}
                 >
                   <Plus />
-                  Add an item
+                  Lisa rida
                 </Button>
               )}
             </div>
@@ -742,18 +742,18 @@ const BlocksField = forwardRef<HTMLDivElement, NestedFieldProps>(
                             Remove this block?
                           </AlertDialogTitle>
                           <AlertDialogDescription>
-                            This action cannot be undone.
+                            Seda ei saa tagasi võtta.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogCancel>Tühista</AlertDialogCancel>
                           <AlertDialogAction
                             onClick={() => {
                               handleRemoveBlock();
                               setIsRemoveBlockDialogOpen(false);
                             }}
                           >
-                            Remove
+                            Eemalda
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
@@ -1265,7 +1265,7 @@ const EntryForm = ({
       sectionByField.set(field, section);
     });
     if (fields.some((field) => field?.advanced && !field.hidden))
-      sections.push({ id: `${sectionBaseId}-advanced`, label: "Advanced" });
+      sections.push({ id: `${sectionBaseId}-advanced`, label: "Täpsemad" });
     return { sections, sectionByField };
   }, [fields, sectionBaseId]);
 
@@ -1296,7 +1296,7 @@ const EntryForm = ({
         >
           {filePath && (
             <div className="space-y-2 overflow-hidden">
-              <FormLabel>Filename</FormLabel>
+              <FormLabel>Failinimi</FormLabel>
               {filePath}
             </div>
           )}
@@ -1326,7 +1326,7 @@ const EntryForm = ({
               <summary className="flex min-h-14 cursor-pointer list-none items-center gap-3 rounded-xl px-4 py-3 outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
                 <ChevronRight className="size-4 shrink-0 transition-transform duration-200 group-open:rotate-90 motion-reduce:transition-none" />
                 <span>
-                  <span className="block font-medium">Advanced</span>
+                  <span className="block font-medium">Täpsemad</span>
                   <span className="block text-sm text-muted-foreground">
                     Search engine texts, button labels and other things that
                     rarely change.

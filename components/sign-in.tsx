@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { OtpVerificationForm } from "@/components/otp-verification-form";
 import { toast } from "sonner";
 import { Loader } from "lucide-react";
+import { Wordmark } from "@/components/wordmark";
 
 export function SignIn() {
   const [email, setEmail] = useState("");
@@ -32,7 +33,7 @@ export function SignIn() {
   const getErrorMessage = (value: string) => {
     if (value.toLowerCase() !== "unable_to_get_user_info") return value;
     return [
-      "GitHub denied profile access. Re-authorize Thor CMS in GitHub Settings > Applications > Authorized GitHub Apps / Authorized OAuth Apps, then try again.",
+      "GitHub denied profile access. Re-authorize Karli CMS in GitHub Settings > Applications > Authorized GitHub Apps / Authorized OAuth Apps, then try again.",
       "https://github.com/settings/applications",
     ].join(" ");
   };
@@ -67,9 +68,9 @@ export function SignIn() {
       }
 
       setSubmittingMethod(null);
-      toast.error("Could not start GitHub sign-in. Please try again.");
+      toast.error("GitHubi sisselogimine ei alanud. Proovi uuesti.");
     } catch (error: any) {
-      toast.error(error?.message || "Could not start GitHub sign-in.");
+      toast.error(error?.message || "GitHubi sisselogimine ei alanud.");
       setSubmittingMethod(null);
     }
   };
@@ -77,7 +78,7 @@ export function SignIn() {
   const handleEmailSignIn = async () => {
     const normalizedEmail = email.trim().toLowerCase();
     if (!normalizedEmail) {
-      toast.error("Invalid email");
+      toast.error("Vigane e-posti aadress");
       return;
     }
 
@@ -96,7 +97,7 @@ export function SignIn() {
       setEmail(normalizedEmail);
       setOtp("");
       setStep("otp");
-      toast.success("We sent you a sign-in code.", { duration: 8000 });
+      toast.success("Saatsime sulle sisselogimiskoodi.", { duration: 8000 });
     } finally {
       setSubmittingMethod(null);
     }
@@ -104,7 +105,7 @@ export function SignIn() {
 
   const handleOtpSignIn = async () => {
     if (otp.length !== 6) {
-      toast.error("Enter the 6-digit code.");
+      toast.error("Sisesta 6-kohaline kood.");
       return;
     }
 
@@ -131,34 +132,21 @@ export function SignIn() {
     setOtp("");
   };
 
-  const sites = ["Thor Offshore", "Thor Fisheries", "O.C. Joensen"];
-
   return (
     <div className="grid min-h-svh max-lg:grid-rows-[auto_1fr] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-      <aside className="flex flex-col justify-between gap-10 bg-[#2E3338] px-6 py-6 text-[#E4E2DC] lg:px-12 lg:py-12">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/thor/thor-group-stone.svg"
-          alt="Thor Group"
-          width={824}
-          height={276}
-          className="h-10 w-auto self-start lg:h-14"
-        />
+      <aside className="flex flex-col justify-between gap-10 bg-[#0e0d0c] px-6 py-6 text-[#f2eee7] lg:px-12 lg:py-12">
+        <Wordmark className="self-start" />
         <div className="space-y-6 max-lg:hidden">
           <p className="font-display text-5xl leading-[0.95] font-semibold xl:text-6xl">
-            Content
+            Kodulehe
             <br />
-            manager
+            sisuhaldus
           </p>
-          <ul className="space-y-1 text-lg text-[#E4E2DC]/70">
-            {sites.map((site) => (
-              <li key={site}>{site}</li>
-            ))}
-          </ul>
+          <p className="text-lg text-[#aaa398]">karlrobertsaaremae.com</p>
         </div>
-        <p className="text-sm text-[#E4E2DC]/60 max-lg:hidden">
-          Edit the texts and images of your websites. Changes go live in about
-          a minute.
+        <p className="text-sm text-[#aaa398] max-lg:hidden">
+          Muuda lehe tekste, rolle, töid ja pilte. Muudatus on lehel umbes
+          minutiga.
         </p>
       </aside>
       <main className="flex items-center justify-center px-6 py-10 lg:px-12">
@@ -182,10 +170,10 @@ export function SignIn() {
           ) : (
             <div className="space-y-8">
               <div className="space-y-2">
-                <h1 className="text-3xl font-semibold">Sign in</h1>
+                <h1 className="text-3xl font-semibold">Logi sisse</h1>
                 <p className="text-muted-foreground">
-                  Enter your email and we will send you a 6-digit code. No
-                  password needed.
+                  Sisesta e-post ja saadame sulle 6-kohalise koodi. Parooli pole
+                  vaja.
                 </p>
               </div>
               <form
@@ -196,14 +184,14 @@ export function SignIn() {
                 }}
               >
                 <label className="block space-y-2">
-                  <span className="text-sm font-medium">Email</span>
+                  <span className="text-sm font-medium">E-post</span>
                   <Input
                     type="email"
                     name="email"
                     autoComplete="email"
                     inputMode="email"
                     autoFocus
-                    placeholder="name@company.fo"
+                    placeholder="nimi@näide.ee"
                     className="h-12 text-base md:text-base"
                     required
                     disabled={isSubmitting}
@@ -217,21 +205,21 @@ export function SignIn() {
                   className="h-12 w-full text-base"
                   disabled={isSubmitting}
                 >
-                  Send me a code
+                  Saada kood
                   {submittingMethod === "email" && (
                     <Loader className="size-4 animate-spin" />
                   )}
                 </Button>
               </form>
               <p className="text-sm text-muted-foreground">
-                Developer?{" "}
+                Arendaja?{" "}
                 <button
                   type="button"
                   className="font-medium text-foreground underline underline-offset-4 hover:no-underline disabled:opacity-50"
                   onClick={handleGithubSignIn}
                   disabled={isSubmitting}
                 >
-                  Sign in with GitHub
+                  Logi sisse GitHubiga
                 </button>
                 {submittingMethod === "github" && (
                   <Loader className="ml-2 inline size-4 animate-spin" />

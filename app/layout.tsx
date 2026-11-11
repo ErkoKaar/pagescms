@@ -18,7 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 const appUrl = getBaseUrl();
 const socialImage = "/images/social-card.png";
-const description = "Content manager for the Thor Group websites";
+const description = "Karl Robert Saaremäe kodulehe sisuhaldus";
 
 export const viewport: Viewport = {
   viewportFit: "cover",
@@ -28,8 +28,8 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
   metadataBase: new URL(appUrl),
   title: {
-    template: "%s | Thor CMS",
-    default: "Thor CMS",
+    template: "%s | Karli CMS",
+    default: "Karli CMS",
   },
   description,
   alternates: {
@@ -38,21 +38,21 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: appUrl,
-    siteName: "Thor CMS",
-    title: "Thor CMS",
+    siteName: "Karli CMS",
+    title: "Karli CMS",
     description,
     images: [
       {
         url: socialImage,
         width: 1200,
         height: 630,
-        alt: "Thor CMS social card",
+        alt: "Karli CMS social card",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Thor CMS",
+    title: "Karli CMS",
     description,
     images: [socialImage],
   },
@@ -64,7 +64,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {  
 	return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="et" suppressHydrationWarning>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",

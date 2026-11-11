@@ -708,10 +708,10 @@ export function Entry({
             type="submit"
             form="entry-form"
             disabled={isSaveDisabled}
-            aria-label="Save"
+            aria-label="Salvesta"
           >
             <Save className="size-4 sm:hidden" />
-            <span className="hidden sm:inline">Save</span>
+            <span className="hidden sm:inline">Salvesta</span>
           </Button>
           {path && (
             <ButtonGroup>

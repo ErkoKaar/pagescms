@@ -47,74 +47,74 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
-/* Thor: kivihall paber, basalt tint. Deep Blue jääb logosse, punane ainult kustutamisele. */
+/* Karl: paber ja tint nagu lehel (karl-robert-saaremae.css). Punane aktsent ainult sõnamärgis, kustutamine tumedam punane. */
 :root {
-  --background: #ECEAE4;
-  --foreground: #2E3338;
-  --card: #F6F5F1;
-  --card-foreground: #2E3338;
-  --popover: #FBFAF7;
-  --popover-foreground: #2E3338;
-  --primary: #2E3338;
-  --primary-foreground: #F2F0EA;
-  --secondary: #DDDAD2;
-  --secondary-foreground: #2E3338;
-  --muted: #E0DDD5;
-  --muted-foreground: #5B6065;
-  --accent: #DDDAD2;
-  --accent-foreground: #2E3338;
-  --destructive: #D1141C;
-  --border: #D2CEC5;
-  --input: #BDB9AE;
-  --ring: #2E3338;
-  --chart-1: #2E3338;
-  --chart-2: #5B6065;
-  --chart-3: #8A8E90;
-  --chart-4: #0B5686;
-  --chart-5: #D1141C;
+  --background: #EBE7DF;
+  --foreground: #171513;
+  --card: #F4F1EB;
+  --card-foreground: #171513;
+  --popover: #F8F6F1;
+  --popover-foreground: #171513;
+  --primary: #171513;
+  --primary-foreground: #F2EEE7;
+  --secondary: #DFDAD0;
+  --secondary-foreground: #171513;
+  --muted: #E2DDD4;
+  --muted-foreground: #5B554C;
+  --accent: #DFDAD0;
+  --accent-foreground: #171513;
+  --destructive: #B91C27;
+  --border: #D3CDC2;
+  --input: #B7B0A3;
+  --ring: #171513;
+  --chart-1: #171513;
+  --chart-2: #5B554C;
+  --chart-3: #8C857A;
+  --chart-4: #AAA398;
+  --chart-5: #E5323E;
   --radius: 0.625rem;
-  --sidebar: #E4E2DC;
-  --sidebar-foreground: #2E3338;
-  --sidebar-primary: #2E3338;
-  --sidebar-primary-foreground: #F2F0EA;
-  --sidebar-accent: #D5D2C9;
-  --sidebar-accent-foreground: #2E3338;
-  --sidebar-border: #D2CEC5;
-  --sidebar-ring: #2E3338;
+  --sidebar: #E3DED5;
+  --sidebar-foreground: #171513;
+  --sidebar-primary: #171513;
+  --sidebar-primary-foreground: #F2EEE7;
+  --sidebar-accent: #D6D0C5;
+  --sidebar-accent-foreground: #171513;
+  --sidebar-border: #D3CDC2;
+  --sidebar-ring: #171513;
 }
 
 .dark {
-  --background: #22262A;
-  --foreground: #E4E2DC;
-  --card: #2E3338;
-  --card-foreground: #E4E2DC;
-  --popover: #2E3338;
-  --popover-foreground: #E4E2DC;
-  --primary: #E4E2DC;
-  --primary-foreground: #22262A;
-  --secondary: #3A4046;
-  --secondary-foreground: #E4E2DC;
-  --muted: #33383D;
-  --muted-foreground: #A9AAA6;
-  --accent: #3A4046;
-  --accent-foreground: #E4E2DC;
+  --background: #0E0D0C;
+  --foreground: #F2EEE7;
+  --card: #161412;
+  --card-foreground: #F2EEE7;
+  --popover: #1C1A17;
+  --popover-foreground: #F2EEE7;
+  --primary: #F2EEE7;
+  --primary-foreground: #0E0D0C;
+  --secondary: #24211E;
+  --secondary-foreground: #F2EEE7;
+  --muted: #1E1C19;
+  --muted-foreground: #AAA398;
+  --accent: #24211E;
+  --accent-foreground: #F2EEE7;
   --destructive: #F0545B;
-  --border: #40464C;
-  --input: #555B61;
-  --ring: #E4E2DC;
-  --chart-1: #E4E2DC;
-  --chart-2: #A9AAA6;
-  --chart-3: #7C8084;
-  --chart-4: #5FA3D0;
-  --chart-5: #F0545B;
-  --sidebar: #2A2E33;
-  --sidebar-foreground: #E4E2DC;
-  --sidebar-primary: #E4E2DC;
-  --sidebar-primary-foreground: #22262A;
-  --sidebar-accent: #3A4046;
-  --sidebar-accent-foreground: #E4E2DC;
-  --sidebar-border: #40464C;
-  --sidebar-ring: #E4E2DC;
+  --border: #2C2925;
+  --input: #3D3934;
+  --ring: #F2EEE7;
+  --chart-1: #F2EEE7;
+  --chart-2: #AAA398;
+  --chart-3: #7A746B;
+  --chart-4: #5B554C;
+  --chart-5: #E5323E;
+  --sidebar: #121110;
+  --sidebar-foreground: #F2EEE7;
+  --sidebar-primary: #F2EEE7;
+  --sidebar-primary-foreground: #0E0D0C;
+  --sidebar-accent: #24211E;
+  --sidebar-accent-foreground: #F2EEE7;
+  --sidebar-border: #2C2925;
+  --sidebar-ring: #F2EEE7;
 }
 
 @layer base {
@@ -126,7 +126,7 @@
   }
 }
 
-/* Pealkirjad: Archivo laiusega 125 nagu Thori lehtedel. */
+/* Pealkirjad: Archivo laiusega 125 nagu Karli lehe tiitrikiri. */
 @layer base {
   h1, h2, .font-display {
     font-stretch: 125%;

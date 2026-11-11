@@ -59,14 +59,13 @@ const EntryUnsavedGuard = ({ active }: { active: boolean }) => {
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Leave without saving?</AlertDialogTitle>
+          <AlertDialogTitle>Lahkud salvestamata?</AlertDialogTitle>
           <AlertDialogDescription>
-            Your changes on this page have not been saved. If you leave now,
-            they will be lost.
+            Selle lehe muudatused on salvestamata. Kui nüüd lahkud, lähevad need kaotsi.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Stay on this page</AlertDialogCancel>
+          <AlertDialogCancel>Jää lehele</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             onClick={() => {
@@ -75,7 +74,7 @@ const EntryUnsavedGuard = ({ active }: { active: boolean }) => {
               if (href) router.push(href);
             }}
           >
-            Leave without saving
+            Lahku salvestamata
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

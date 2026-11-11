@@ -31,7 +31,7 @@ export function OtpVerificationForm({
   pending,
   resendDisabled,
   resendPending,
-  submitLabel = "Sign in",
+  submitLabel = "Logi sisse",
   onChange,
   onResend,
   onSignInAnotherWay,
@@ -41,10 +41,10 @@ export function OtpVerificationForm({
     <form className="flex w-full flex-col gap-8" onSubmit={onSubmit}>
       <div className="space-y-2">
         <h1 className="text-3xl font-semibold">
-          Check your email
+          Vaata oma postkasti
         </h1>
         <p className="text-muted-foreground">
-          We sent a 6-digit code to <span className="font-medium text-foreground">{emailLabel}</span>. It is valid for 5 minutes.
+          Saatsime 6-kohalise koodi aadressile <span className="font-medium text-foreground">{emailLabel}</span>. Kood kehtib 5 minutit.
         </p>
       </div>
 
@@ -79,7 +79,7 @@ export function OtpVerificationForm({
           type="button"
           variant="ghost"
         >
-          Resend code
+          Saada kood uuesti
           {resendPending && <Loader className="size-4 animate-spin" />}
         </Button>
         {onSignInAnotherWay && (
@@ -90,7 +90,7 @@ export function OtpVerificationForm({
             type="button"
             variant="ghost"
           >
-            Use a different email
+            Kasuta teist e-posti
           </Button>
         )}
       </div>

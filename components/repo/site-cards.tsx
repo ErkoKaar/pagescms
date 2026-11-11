@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { siteHref, useSites } from "@/hooks/use-sites";
-import { getThorSite } from "@/lib/thor-sites";
+import { getSite } from "@/lib/sites";
 import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -24,7 +24,7 @@ export function SiteCards() {
   if (repos.length === 0) {
     return (
       <p className="text-muted-foreground">
-        No websites have been shared with this account yet.
+        Selle kontoga pole veel ühtegi lehte jagatud.
       </p>
     );
   }
@@ -32,7 +32,7 @@ export function SiteCards() {
   return (
     <ul className="grid gap-4 md:grid-cols-3">
       {repos.map((repo) => {
-        const site = getThorSite(repo.repo);
+        const site = getSite(repo.repo);
         const href = siteHref(repo);
 
         return (
@@ -44,7 +44,7 @@ export function SiteCards() {
               <div className="aspect-[1200/630] overflow-hidden bg-muted">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={`${site.url}/og.jpg`}
+                  src={site.image}
                   alt=""
                   width={1200}
                   height={630}
@@ -64,7 +64,7 @@ export function SiteCards() {
               </div>
               <div className="mt-auto flex items-center justify-between gap-3">
                 <span className={cn(buttonVariants({ size: "lg" }), "pointer-events-none")}>
-                  Edit website
+                  Muuda lehte
                   <ArrowRight className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none" />
                 </span>
                 {site && (
@@ -74,7 +74,7 @@ export function SiteCards() {
                     rel="noreferrer"
                     className="relative z-10 inline-flex min-h-10 items-center gap-1 text-sm font-medium underline underline-offset-4 hover:no-underline"
                   >
-                    View live
+                    Ava leht
                     <ArrowUpRight className="size-3.5" />
                   </a>
                 )}

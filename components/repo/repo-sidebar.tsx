@@ -14,7 +14,7 @@ import { useConfig } from "@/contexts/config-context";
 import { useRepo } from "@/contexts/repo-context";
 import { useUser } from "@/contexts/user-context";
 import { hasGithubIdentity } from "@/lib/authz-shared";
-import { getSiteName, getThorSite } from "@/lib/thor-sites";
+import { getSiteName, getSite } from "@/lib/sites";
 import { isCacheEnabled, isConfigEnabled } from "@/lib/config";
 import { getRootActions } from "@/lib/actions";
 import { siteHref, useSites } from "@/hooks/use-sites";
@@ -96,7 +96,7 @@ function RepoSwitcher() {
   const currentBranch = config?.branch ?? "";
   const { user } = useUser();
   const isDeveloper = hasGithubIdentity(user);
-  const site = getThorSite(repo);
+  const site = getSite(repo);
   const sortedBranches = useMemo(
     () => [...branches].sort((a, b) => a.localeCompare(b)),
     [branches],
@@ -138,28 +138,18 @@ function RepoSwitcher() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/thor/thor-mark-basalt.svg"
-                alt=""
-                width={358}
-                height={276}
-                className="h-6 w-8 object-contain dark:hidden"
-              />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/thor/thor-mark-stone.svg"
-                alt=""
-                width={358}
-                height={276}
-                className="hidden h-6 w-8 object-contain dark:block"
-              />
+              <span
+                aria-hidden
+                className="grid size-8 shrink-0 place-items-center rounded-full bg-primary text-[0.6rem] font-bold tracking-[0.08em] text-primary-foreground"
+              >
+                KRS
+              </span>
               <div className="grid flex-1 text-left leading-tight">
                 <span className="truncate font-display font-semibold">
                   {site?.name ?? repo}
                 </span>
                 <span className="truncate text-xs text-muted-foreground">
-                  {isDeveloper ? currentBranch || owner : "Switch website"}
+                  {isDeveloper ? currentBranch || owner : "Vaheta lehte"}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
@@ -178,7 +168,7 @@ function RepoSwitcher() {
               <>
                 <DropdownMenuItem asChild>
                   <a href={site.url} target="_blank" rel="noreferrer">
-                    View live website
+                    Ava leht
                     <ArrowUpRight className="size-3 text-muted-foreground ml-auto" />
                   </a>
                 </DropdownMenuItem>
@@ -316,7 +306,7 @@ export function RepoSidebar() {
     return media.map((item: any) => ({
       type: "media",
       name: item.name || "default",
-      label: item.label || item.name || "Media",
+      label: item.label || item.name || "Meedia",
     }));
   }, [config]);
 
@@ -347,7 +337,7 @@ export function RepoSidebar() {
 
       items.push({
         key: "admin-collaborators",
-        label: "Collaborators",
+        label: "Kaastöölised",
         href: `/${config.owner}/${config.repo}/${encodeURIComponent(config.branch)}/collaborators`,
         icon: <Users className="size-4" />,
       });
@@ -425,7 +415,7 @@ export function RepoSidebar() {
 
       return [
         ...collectActiveGroupKeys(contentNavigation, "Content"),
-        ...collectActiveGroupKeys(mediaNavigation, "Media"),
+        ...collectActiveGroupKeys(mediaNavigation, "Meedia"),
       ];
     },
     [contentNavigation, hasActiveDescendant, mediaNavigation],
@@ -574,7 +564,7 @@ export function RepoSidebar() {
 
   const groups = [
     renderNavigationGroup("Content", contentNavigation),
-    renderNavigationGroup("Media", mediaNavigation),
+    renderNavigationGroup("Meedia", mediaNavigation),
     rootActions.length > 0 && config
       ? (
         <SidebarGroup key="Actions">
